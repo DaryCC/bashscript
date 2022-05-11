@@ -1,0 +1,6 @@
+.vscode
+.#.spacemacs
+*.~undo-tree~
+*.log
+*.adotfile
+*.adotfolder
