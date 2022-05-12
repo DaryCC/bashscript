@@ -1,0 +1,4 @@
+#+title: Bash programming exercises
+#+escription:Bash programming exercises from: The Complete Guide to Bash Programming,educative.io
+Bash programming exercises from: *The Complete Guide to Bash
+Programming*,educative.io
