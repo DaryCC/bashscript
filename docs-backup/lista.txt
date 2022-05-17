@@ -1,0 +1,15 @@
+/home/darycc/Coding/github.com/DaryCC/bashscripting/file1
+/home/darycc/Coding/github.com/DaryCC/bashscripting/file44
+/home/darycc/Coding/github.com/DaryCC/bashscripting/.adotfolder/file1
+/home/darycc/Coding/github.com/DaryCC/bashscripting/file2
+/home/darycc/Coding/github.com/DaryCC/bashscripting/file3
+/home/darycc/Coding/github.com/DaryCC/bashscripting/file1
+/home/darycc/Coding/github.com/DaryCC/bashscripting/file44
+/home/darycc/Coding/github.com/DaryCC/bashscripting/.adotfolder/file1
+/home/darycc/Coding/github.com/DaryCC/bashscripting/file2
+/home/darycc/Coding/github.com/DaryCC/bashscripting/file3
+/home/darycc/Coding/github.com/DaryCC/bashscripting/file1
+/home/darycc/Coding/github.com/DaryCC/bashscripting/file44
+/home/darycc/Coding/github.com/DaryCC/bashscripting/.adotfolder/file1
+/home/darycc/Coding/github.com/DaryCC/bashscripting/file2
+/home/darycc/Coding/github.com/DaryCC/bashscripting/file3
