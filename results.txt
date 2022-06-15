@@ -1,0 +1,3 @@
+tar - FAILS
+tar - OK
+cp - OK

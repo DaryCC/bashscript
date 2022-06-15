@@ -1,7 +1,0 @@
-./file1:2:Nadia
-./sub/file4.txt:3:Nadia
-./sub/file5.txt:3:Nadia
-./sub2/file4.txt:3:Nadia
-./sub2/file5.txt:3:Nadia
-./file4.txt:3:Nadia
-./file5.txt:3:Nadia

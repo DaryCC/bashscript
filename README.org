@@ -1,4 +1,110 @@
 #+title: Bash programming exercises
+#+PROPERTY: header-args :tangle exercise1.sh
 #+description:Bash programming exercises from: \
 The Complete Guide to Bash Programming,educative.io\\
 https://www.educative.io/courses/guide-to-bash-programming
+
+* Exercises
+** Integrating backup script to bash
+1. Add the script’s path to the PATH variable. Edit the *~/.bash_profile* file for that.
+2. Define the alias with an absolute path to the script. Do that in the *~/.bashrc file*.
+3. Copy the script to the ~/usr/local/bin~ directory and make it executable:
+#+begin_src shell
+sudo cp -r make-backup.sh /usr/local/bin/ sudo chmod +x
+/usr/local/bin/make-backup.sh
+#+end_src
+The PATH variable contains this path by default. If there is no such directory
+in your environment, create it. \\
+If we need to remove a declared alias, we call
+the ~unalias~ Bash built-in. For example, this call removes the ~make-backup.sh~
+alias:
+#+begin_src shell
+unalias make-backup.sh
+#+end_src
+Let’s suppose that we integrated the backup script with Bash in one of three
+ways. Then, we can launch it by name, like this:
+#+begin_src shell 
+make-backup.sh photo
+#+end_src
+This is the final script:
+#+begin_src shell :tangle ./exercises/make-backup.sh
+#!/bin/bash
+
+tar -cjf "$1".tar.bz2 "$1" && echo "tar - OK" > results.txt || { echo "tar - FAILS" > results.txt ; exit 1 ; }
+
+mv -f "$1".tar.bz2 ~/backup && echo "cp - OK" >> results.txt || ! echo "cp - FAILS" >> results.txt
+#+end_src
+** Operator [[
+ Write the Bash script with the following if condition:
+    1. If the input parameter has a value of Alice, you print “Hello Alice”.
+    2. If the input parameter has a value of Bob, you print “Hello Bob”.
+    3. If none of the above cases hold, print “Hello John Doe”.
+#+begin_src shell :tangle ./exercises/exercise0.sh
+#!/bin/bash
+if [[ "$1" = "Alice" ]]
+then
+    echo "Hello Alice"
+elif [[ "$1" = "Bob" ]]
+then
+    echo "Hello Bob"
+else
+    echo "Hello Jhon Doe"
+    exit 1;
+fi
+#+end_src  
+** Operator [[ and Directories
+
+Write a script to compare two directories named dir1 and dir2. The script should print all files from one directory that are absent in the other one.
+
+#+begin_src shell  :tangle ./exercises/exercise1.sh
+
+  #!/bin/bash
+  cd dir1
+  find . -type f -exec test ! -e ../dir2/{} \; -a -exec echo {} \;
+
+  cd ../dir2
+  find . -type f -exec test ! -e ../dir1/{} \; -a -exec echo {} \;
+  #+end_src 
+
+** Case stament: compressing file
+#+begin_src shell 
+  !#/bin/bash
+  operation="$1"
+
+if [[ "$operation" == "-a" ]]
+then
+    tar -c -f documents.tar ~/Documents
+elif [[ "$operation" == "-c" ]]
+then
+    tar -c -j -f documents.tar.bz2 ~/Documents
+elif [[ "$operation" == "-x" ]]
+then
+    tar -x -f documents.tar*
+else
+    echo "Invalid option"
+    exit 1
+fi
+#+end_src 
+
+#+begin_src shell :tangle ./exercises/archiving-case.sh
+#!/bin/bash
+operation="$1"
+case "$operation" in
+    "-a")
+        tar -c -f documents.tar ~/Documents
+    ;;
+
+    "-c")
+        tar -c -j -f documents.tar.bz2 ~/Documents
+    ;;
+
+    "-x")
+        tar -x -f documents.tar*
+    ;;
+
+    *)
+        echo "Invalid option"
+        exit 1
+    ;;
+esac
+#+end_src
