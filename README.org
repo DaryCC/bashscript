@@ -4,6 +4,15 @@
 The Complete Guide to Bash Programming,educative.io\\
 https://www.educative.io/courses/guide-to-bash-programming
 
+* Contenido :TOC:
+- [[#exercises][Exercises]]
+  - [[#integrating-backup-script-to-bash][Integrating backup script to bash]]
+  - [[#operator-][Operator [[]]
+  - [[#operator--and-directories][Operator [[ and Directories]]
+  - [[#case-stament-compressing-file][Case stament: compressing file]]
+  - [[#case-estatement-rewrite-if-else-to-case][Case estatement, rewrite if else to case]]
+  - [[#asociative-array][Asociative array]]
+
 * Exercises
 ** Integrating backup script to bash
 1. Add the script’s path to the PATH variable. Edit the *~/.bash_profile* file for that.
@@ -87,24 +96,99 @@ fi
 #+end_src 
 
 #+begin_src shell :tangle ./exercises/archiving-case.sh
+  #!/bin/bash
+  operation="$1"
+  case "$operation" in
+      "-a")
+          tar -c -f documents.tar ~/Documents
+      ;;
+
+      "-c")
+          tar -c -j -f documents.tar.bz2 ~/Documents
+      ;;
+
+      "-x")
+          tar -x -f documents.tar*
+      ;;
+
+      ,*)
+          echo "Invalid option"
+          exit 1
+      ;;
+  esac
+#+end_src
+** Case estatement, rewrite if else to case
+Consider the following script. Rewrite it with the case statement.
+
+#+begin_src shell
 #!/bin/bash
-operation="$1"
-case "$operation" in
-    "-a")
-        tar -c -f documents.tar ~/Documents
+if [[ "$1" = "Alice" ]]
+then
+    echo "Hello Alice"
+elif [[ "$1" = "Bob" ]]
+then
+    echo "Hello Bob"
+else 
+    echo "Hello John Doe"
+fi
+#+end_src
+
+#+begin_src shell :tangle ./exercises/script.sh
+#!/usr/bin/env bash
+variable="$1"
+case "$variable" in
+    "Alice")
+        echo "Hello Alice"
     ;;
 
-    "-c")
-        tar -c -j -f documents.tar.bz2 ~/Documents
-    ;;
-
-    "-x")
-        tar -x -f documents.tar*
+    "Bob")
+        echo "Hello Bob"
     ;;
 
     *)
-        echo "Invalid option"
-        exit 1
+        echo "Hello John Doe"
+        exit 1;
     ;;
 esac
+#+end_src
+** Asociative array
+#+begin_src shell :tangle ./exercises/switch-config-case.sh
+  #! /bin/bash
+
+  opcion="$1"
+  rm -r ~/.bashrc
+  case "$opcion" in
+      "h")
+          ln -s ~/.bashrc-home ~/.bashrc
+          ;;
+      "w")
+          ln -s ~/.bashrc-work ~/.bashrc
+          ;;
+      ,*)
+          echo "opcion inválida"
+          exit 1;
+          ;;
+  esac
+#+end_src
+
+#+begin_src shell :tangle ./exercises/switch-config-array.sh
+  #!/bin/bash
+
+  file="$1"
+
+  rm ~/.bashrc
+
+  case "$file" in
+      "h")
+          ln -s ~/.bashrc-home ~/.bashrc
+          ;;
+
+      "w")
+          ln -s ~/.bashrc-work ~/.bashrc
+          ;;
+
+      ,*)
+          echo "Invalid option"
+          ;;
+  esac
 #+end_src
