@@ -12,6 +12,12 @@ https://www.educative.io/courses/guide-to-bash-programming
   - [[#case-stament-compressing-file][Case stament: compressing file]]
   - [[#case-estatement-rewrite-if-else-to-case][Case estatement, rewrite if else to case]]
   - [[#asociative-array][Asociative array]]
+  - [[#loop-operators][Loop operators]]
+    - [[#while][while]]
+    - [[#until][until]]
+    - [[#example][Example]]
+    - [[#infinite-loop][Infinite loop]]
+    - [[#reading-a-standard-input-stream][Reading a Standard Input Stream]]
 
 * Exercises
 ** Integrating backup script to bash
@@ -191,4 +197,88 @@ esac
           echo "Invalid option"
           ;;
   esac
+#+end_src
+** Loop operators
+*** while
+#+begin_src shell
+#!/bin/bash
+
+while ! ping -c 1 -W 1 google.com &> /dev/null
+do
+  sleep 1
+done
+#+end_src
+*** until
+#+begin_src shell
+#!/bin/bash
+
+until ping -c 1 -W 1 google.com &> /dev/null
+do
+    sleep 1
+done
+
+echo "The google.com server is available"
+#+end_src
+*** Example
+Sleep and create a file.
+#+begin_src shell :tangle  ./exercises/sleep-and-create-a-file.sh
+#sleep-and-create-a-file.sh
+  sleep 5
+  touch file.txt
+#+end_src
+#+begin_src shell :tangle ./exercises/check-a-file.sh
+#!/bin/bash
+
+# running the file in background 
+./sleep-and-create-a-file.sh &
+
+# using while loop to find the file
+while [[ ! -e "./file.txt" ]]
+do
+  echo "File not found";
+  sleep 1;
+done
+
+echo "File found!!!"
+#+end_src
+
+#+RESULTS:
+: File found!!!
+
+*** Infinite loop
+En este script se muestra el espacio usado en el disco duro.
+#+begin_src shell
+#!/bin/bash
+
+while true
+do
+	clear
+	df -hT
+	echo “Zzzzz”
+	sleep 2
+done
+#+end_src
+*** Reading a Standard Input Stream
+Este texto pertenece al /contacts.txt/
+#+begin_src shell
+Alice=alice@gmail.com
+Bob=(697) 955-5984
+Eve=(245) 317-0117
+Mallory=mallory@hotmail.com
+#+end_src
+
+
+#+begin_src shell :tangle ./exercises/while-contacts.sh
+  #!/bin/bash
+
+  declare -A array
+
+  while IFS=$'=' read -r name contact
+  do
+      array[$name]=$contact
+  done < "contacts.txt"
+
+  echo "${array["$1"]}"
+#./while-contacts.sh "Alice"
+
 #+end_src
