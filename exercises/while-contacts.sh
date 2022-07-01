@@ -1,10 +1,11 @@
 #!/bin/bash
 
-declare -A array
+  declare -A array
 
-while IFS=$'=' read -r name contact
-do
-    array[$name]=$contact
-done < "contacts.txt"
+  while IFS=$'=' read -r name contact
+  do
+      array[$name]=$contact
+  done < "contacts.txt"
 
-echo "${array["$1"]}"
+  echo "${array["$1"]}"
+#./while-contacts.sh "Alice"

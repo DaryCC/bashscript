@@ -58,3 +58,79 @@ do
 	echo “Zzzzz”
 	sleep 2
 done
+
+Alice=alice@gmail.com
+Bob=(697) 955-5984
+Eve=(245) 317-0117
+Mallory=mallory@hotmail.com
+
+#!/bin/bash
+
+for word in $1
+do
+    echo "$word"
+done
+
+#!/bin/bash
+for word in $@
+do
+  echo "$word"
+done
+
+./for-string.sh this is a string
+./for-string.sh "this is a string"
+
+#get rid of "in $@"
+  for word
+  do
+    echo "$word"
+  done
+
+#!/bin/bash
+#"hola perro"
+for word in $1
+do
+    echo "$word"
+done
+
+#!/bin/bash
+#hola,perro,asqueroso
+#./for-path.sh "~/My Documents/file1.pdf,~/My Documents/report2.txt"
+  IFS=$','
+  for path in $1
+  do
+      echo "$path"
+  done
+
+#!/bin/bash
+array=(Alice Bob Eve Mallory)
+
+for element in "${array[@]}"
+do
+    echo "$element"
+done
+
+array=(Alice Bob Eve Mallory)
+
+for i in 0 1 2
+do
+  echo "${array[i]}"
+done
+
+array=(Alice Bob Eve Mallory)
+
+for i in {0..2}
+do
+  echo "${array[i]}"
+done
+
+#!/bin/bash
+
+    array=(Alice Bob Eve Mallory)
+
+    for element in "${array[@]:0:2}"
+    do
+        echo "$element"
+    done
+#Alice
+#Bob
