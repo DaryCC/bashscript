@@ -20,6 +20,11 @@ https://www.educative.io/courses/guide-to-bash-programming
     - [[#reading-a-standard-input-stream][Reading a Standard Input Stream]]
     - [[#for-statement][/For/ Statement]]
       - [[#examples][Examples]]
+    - [[#files-processing][Files processing]]
+    - [[#the-second-form-of-for][The second form of for]]
+    - [[#controlling-the-loop-execution-break][Controlling the Loop Execution: break]]
+    - [[#controlling-loop-execution-continue][Controlling Loop Execution: continue]]
+    - [[#exercise][Exercise]]
 
 * Exercises
 ** Integrating backup script to bash
@@ -389,4 +394,180 @@ for elements
     done
 #Alice
 #Bob
+#+end_src
+*** Files processing
+#+begin_src shell
+#!/bin/bash
+
+find . -maxdepth 1 -print0 |
+while IFS= read -r -d '' filename
+do
+    file "$filename"
+done
+#+end_src
+#+begin_src shell
+for filename in ~/Documents/*.pdf
+#or
+find . -maxdepth 1 -exec file {} \;
+#+end_src
+*** The second form of for
+The second ~form~ of the for statement allows us to apply an arithmetic expression
+as a condition. Let’s consider cases when we need the second form.
+#+begin_src shell
+#!/bin/bash
+
+result=1
+
+for i in {1..5}
+do
+    ((result *= $i))
+done
+
+echo "The factorial of 5 is $result"
+#+end_src
+The ~seq~ utility can solve our problem. It generates a sequence of integers or fractions.
+
+The following table shows options to call the seq utility.\\
+#+DOWNLOADED: file:///home/darycc/Desktop/seq.png @ 2022-07-01 04:16:26
+[[file:Exercises/2022-07-01_04-16-26_seq.png]]
+
+~./for-factorial-seq.sh  3~
+#+begin_src shell
+  #!/bin/bash
+
+  result=1
+
+  for i in $(seq $1)
+  do
+      ((result *= $i))
+  done
+
+  echo "The factorial of $1 is $result"
+#+end_src
+
+#+begin_src shell
+  #!/bin/bash
+
+result=1
+
+for (( i = 1; i <= $1; ++i ))
+do
+    ((result *= i))
+done
+
+echo "The factorial of $1 is $result"
+#+end_src
+*** Controlling the Loop Execution: break
+for break
+#+begin_src shell
+  #!/bin/bash
+
+  array=(Alice Bob Eve Mallory)
+  is_found="0"
+  GET
+  for element in "${array[@]}"
+  do
+      if [[ "$element" == "$1" ]]
+      then
+          is_found="1"
+          break
+      fi
+  done
+  #no equal
+  if [[ "$is_found" -ne "0" ]]
+  then
+      echo "The array contains the $1 element"
+  else
+      echo "The array does not contain the $1 element"
+  fi
+#+end_src
+for exit
+#+begin_src shell
+#!/bin/bash
+
+array=(Alice Bob Eve Mallory)
+
+for element in "${array[@]}"
+do
+  if [[ "$element" == "$1" ]]
+  then
+    echo "The array contains the $1 element"
+    exit 0
+  fi
+done
+
+echo "The array does not contain the $1 element"
+
+#+end_src
+*** Controlling Loop Execution: continue
+Sin /continue/
+#+begin_src shell
+#!/bin/bash
+
+array=(1 25 -5 4 -9 3)
+sum=0
+
+for element in "${array[@]}"
+do
+  if (( 0 < element ))
+  then
+    ((sum += element))
+  fi
+done
+
+echo "The sum of the positive numbers is $sum"
+
+#+end_src
+
+Con /continue/
+#+begin_src shell
+#!/bin/bash
+
+array=(1 25 -5 4 -9 3)
+sum=0
+
+for element in "${array[@]}"
+do
+  if (( element < 0))
+  then
+    continue
+  fi
+
+  ((sum += element))
+done
+
+echo "The sum of the positive numbers is $sum"
+
+#+end_src
+*** Exercise
+Write a game called /More or Less/ The first participant chooses any number
+from 1 to 100. The second participant tries to guess it in seven tries.
+
+Our script chooses a number. The user enters their guess. The script answers if
+the guess is more or less than the chosen number. The user then tries to guess
+the number six more times.
+#+begin_src shell :tangle ./exercises/more-less-game.sh
+#!/bin/bash
+let numero=$(( $RANDOM % 100 + 1))
+#echo "$numero"
+
+for i in {1..7}
+do
+    echo "Escribe el numero"
+    read eleccion
+    #echo "$numero"
+
+    if ((numero < eleccion))
+    then
+        echo "El numero debe ser menor"
+    elif ((numero > eleccion))
+    then
+        echo "El numero debe ser mayor"
+    else
+        echo "Ese es el número"
+        exit 0
+    fi
+
+done
+echo "Ya la cagaste, no adivinaste ni mergas"
 #+end_src

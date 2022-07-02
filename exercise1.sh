@@ -134,3 +134,116 @@ done
     done
 #Alice
 #Bob
+
+#!/bin/bash
+
+find . -maxdepth 1 -print0 |
+while IFS= read -r -d '' filename
+do
+    file "$filename"
+done
+
+for filename in ~/Documents/*.pdf
+#or
+find . -maxdepth 1 -exec file {} \;
+
+#!/bin/bash
+
+result=1
+
+for i in {1..5}
+do
+    ((result *= $i))
+done
+
+echo "The factorial of 5 is $result"
+
+#!/bin/bash
+
+result=1
+
+for i in $(seq $1)
+do
+    ((result *= $i))
+done
+
+echo "The factorial of $1 is $result"
+
+#!/bin/bash
+
+result=1
+
+for (( i = 1; i <= $1; ++i ))
+do
+    ((result *= i))
+done
+
+echo "The factorial of $1 is $result"
+
+#!/bin/bash
+
+array=(Alice Bob Eve Mallory)
+is_found="0"
+GET
+for element in "${array[@]}"
+do
+    if [[ "$element" == "$1" ]]
+    then
+        is_found="1"
+        break
+    fi
+done
+#no equal
+if [[ "$is_found" -ne "0" ]]
+then
+    echo "The array contains the $1 element"
+else
+    echo "The array does not contain the $1 element"
+fi
+
+#!/bin/bash
+
+array=(Alice Bob Eve Mallory)
+
+for element in "${array[@]}"
+do
+  if [[ "$element" == "$1" ]]
+  then
+    echo "The array contains the $1 element"
+    exit 0
+  fi
+done
+
+echo "The array does not contain the $1 element"
+
+#!/bin/bash
+
+array=(1 25 -5 4 -9 3)
+sum=0
+
+for element in "${array[@]}"
+do
+  if (( 0 < element ))
+  then
+    ((sum += element))
+  fi
+done
+
+echo "The sum of the positive numbers is $sum"
+
+#!/bin/bash
+
+array=(1 25 -5 4 -9 3)
+sum=0
+
+for element in "${array[@]}"
+do
+  if (( element < 0))
+  then
+    continue
+  fi
+
+  ((sum += element))
+done
+
+echo "The sum of the positive numbers is $sum"
