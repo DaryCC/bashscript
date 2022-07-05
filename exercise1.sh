@@ -247,3 +247,88 @@ do
 done
 
 echo "The sum of the positive numbers is $sum"
+
+#!/bin/bash
+    mem() { cat /proc/meminfo; }
+#mem
+#unset mem
+#unset -f mem, to remove the function and keep the variable
+
+eval echo hi
+#output
+# __ed_mem.txt
+# __ed_script.sh
+# __ed_stderr.txt
+# __ed_stdout.txt
+# main.sh
+# output
+
+code_to_error()
+{
+  case $1 in
+    1)
+      echo "File not found:"
+      ;;
+    2)
+      echo "Permission to read the file denied:"
+      ;;
+  esac
+}
+
+print_error()
+{
+  echo "$(code_to_error $1) $2" >> debug.log
+}
+
+
+# Calling the function
+print_error 1 "readme.txt"
+print_error 2 "readme.txt"
+
+code_to_error()
+{
+  case $1 in
+    1)
+      error_text="File not found:"
+      ;;
+    2)
+      error_text="Permission to read the file denied:"
+      ;;
+  esac
+}
+
+print_error()
+{
+  code_to_error $1
+  echo "$error_text $2" >> debug.log
+}
+
+
+# Calling the function
+print_error 1 "readme2.txt"
+print_error 2 "readme2.txt"
+
+code_to_error()
+{
+  local _result_variable=$2
+
+  case $1 in
+    1)
+      eval $_result_variable="'File not found:'"
+      ;;
+    2)
+      eval $_result_variable="'Permission to read the file denied:'"
+      ;;
+  esac
+}
+
+print_error()
+{
+  code_to_error $1 "error_text"
+  echo "$error_text $2" >> debug.log
+}
+
+
+# Calling the function
+print_error 1 "readme.txt"
+print_error 2 "readme.txt"

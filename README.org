@@ -1,4 +1,4 @@
-#+title: Bash programming exercises
+#+title: Shell Scripting Exercises
 #+PROPERTY: header-args :tangle exercise1.sh
 #+description:Bash programming exercises from: \
 The Complete Guide to Bash Programming,educative.io\\
@@ -7,24 +7,30 @@ https://www.educative.io/courses/guide-to-bash-programming
 * Contenido :TOC:
 - [[#exercises][Exercises]]
   - [[#integrating-backup-script-to-bash][Integrating backup script to bash]]
-  - [[#operator-][Operator [[]]
-  - [[#operator--and-directories][Operator [[ and Directories]]
+  - [[#if-statements][If statements]]
+    - [[#operator-][Operator [[]]
+    - [[#operator--and-directories][Operator [[ and Directories]]
   - [[#case-stament-compressing-file][Case stament: compressing file]]
-  - [[#case-estatement-rewrite-if-else-to-case][Case estatement, rewrite if else to case]]
-  - [[#asociative-array][Asociative array]]
+    - [[#case-estatement-rewrite-if-else-to-case][Case estatement, rewrite if else to case]]
+    - [[#asociative-array][Asociative array]]
   - [[#loop-operators][Loop operators]]
     - [[#while][while]]
     - [[#until][until]]
     - [[#example][Example]]
     - [[#infinite-loop][Infinite loop]]
     - [[#reading-a-standard-input-stream][Reading a Standard Input Stream]]
-    - [[#for-statement][/For/ Statement]]
+    - [[#for-statement][For Statement]]
       - [[#examples][Examples]]
     - [[#files-processing][Files processing]]
     - [[#the-second-form-of-for][The second form of for]]
     - [[#controlling-the-loop-execution-break][Controlling the Loop Execution: break]]
     - [[#controlling-loop-execution-continue][Controlling Loop Execution: continue]]
     - [[#exercise][Exercise]]
+  - [[#functions][Functions]]
+    - [[#returning-a-function-result][Returning a Function Result]]
+      - [[#eval][Eval]]
+    - [[#exercises-1][Exercises]]
+      - [[#exercise-1][Exercise]]
 
 * Exercises
 ** Integrating backup script to bash
@@ -56,7 +62,8 @@ tar -cjf "$1".tar.bz2 "$1" && echo "tar - OK" > results.txt || { echo "tar - FAI
 
 mv -f "$1".tar.bz2 ~/backup && echo "cp - OK" >> results.txt || ! echo "cp - FAILS" >> results.txt
 #+end_src
-** Operator [[
+** If statements
+*** Operator [[
  Write the Bash script with the following if condition:
     1. If the input parameter has a value of Alice, you print “Hello Alice”.
     2. If the input parameter has a value of Bob, you print “Hello Bob”.
@@ -74,7 +81,7 @@ else
     exit 1;
 fi
 #+end_src  
-** Operator [[ and Directories
+*** Operator [[ and Directories
 
 Write a script to compare two directories named dir1 and dir2. The script should print all files from one directory that are absent in the other one.
 
@@ -130,7 +137,7 @@ fi
       ;;
   esac
 #+end_src
-** Case estatement, rewrite if else to case
+*** Case estatement, rewrite if else to case
 Consider the following script. Rewrite it with the case statement.
 
 #+begin_src shell
@@ -164,7 +171,7 @@ case "$variable" in
     ;;
 esac
 #+end_src
-** Asociative array
+*** Asociative array
 #+begin_src shell :tangle ./exercises/switch-config-case.sh
   #! /bin/bash
 
@@ -289,7 +296,7 @@ Mallory=mallory@hotmail.com
 #./while-contacts.sh "Alice"
 
 #+end_src
-*** /For/ Statement
+*** For Statement
 Here, we should not enclose the position parameter ~$1~ in quotes. Quotes prevent
 word splitting. Without word splitting, Bash passes the whole string to the
 first iteration of the ~for~ loop. Then, the loop finishes. We do not want this
@@ -304,7 +311,7 @@ done
 #+end_src
 When we call the script, we should enclose the input string in the
 double-quotes. Then, the whole string comes into the ~$1~ parameter. Here is an
-example of calling the script: ~./for-string.sh "this is a string"~
+example of calling the script: ~./for-string.sh \"this is a string\"~
 
 There is a way to get rid of the double quotes when calling the script. Replace
 the ~$1~ parameter in the for condition with ~$@~. Then, the loop statement becomes
@@ -570,4 +577,189 @@ do
 
 done
 echo "Ya la cagaste, no adivinaste ni mergas"
+#+end_src
+** Functions
+#+begin_src shell
+    #!/bin/bash
+      mem() { cat /proc/meminfo; }
+  #mem
+  #unset mem
+  #unset -f mem, to remove the function and keep the variable
+#+end_src
+*** Returning a Function Result
+In a typical procedural language, the ~return~ command returns a variable of any
+type from a function. It can be a number, string, or array. We need other
+mechanisms for doing that in Bash. There are three options:
+
+**** Eval
+On a Unix or Linux system, the ~eval~ command is used to run the arguments as a
+shell command.
+
+When you have a Unix or Linux command saved in a variable and wish to run that
+command, the ~eval~ command is useful. The command evaluates the argument first,
+then executes the command it contains.
+
+Syntax: ~eval [arg]...~
+#+begin_src shell
+      eval echo hi
+  #output
+  # __ed_mem.txt
+  # __ed_script.sh
+  # __ed_stderr.txt
+  # __ed_stdout.txt
+  # main.sh
+  # output
+
+#+end_src
+1. The command susbstitution
+#+begin_src shell
+code_to_error()
+{
+  case $1 in
+    1)
+      echo "File not found:"
+      ;;
+    2)
+      echo "Permission to read the file denied:"
+      ;;
+  esac
+}
+
+print_error()
+{
+  echo "$(code_to_error $1) $2" >> debug.log
+}
+
+
+# Calling the function
+print_error 1 "readme.txt"
+print_error 2 "readme.txt"
+#+end_src
+
+2. A global variable
+#+begin_src shell
+code_to_error()
+{
+  case $1 in
+    1)
+      error_text="File not found:"
+      ;;
+    2)
+      error_text="Permission to read the file denied:"
+      ;;
+  esac
+}
+
+print_error()
+{
+  code_to_error $1
+  echo "$error_text $2" >> debug.log
+}
+
+
+# Calling the function
+print_error 1 "readme2.txt"
+print_error 2 "readme2.txt"
+#+end_src
+3. The caller specifies a global variable
+#+begin_src shell
+code_to_error()
+{
+  local _result_variable=$2
+
+  case $1 in
+    1)
+      eval $_result_variable="'File not found:'"
+      ;;
+    2)
+      eval $_result_variable="'Permission to read the file denied:'"
+      ;;
+  esac
+}
+
+print_error()
+{
+  code_to_error $1 "error_text"
+  echo "$error_text $2" >> debug.log
+}
+
+
+# Calling the function
+print_error 1 "readme.txt"
+print_error 2 "readme.txt"
+#+end_src
+*** Exercises
+**** Exercise
+Write the following functions for printing error messages in English and German:
++ print_error
++ code_to_error_en
++ code_to_error_de
+Write two versions of the "code_to_error" function:
++ Using the case statement in ~print-error-local.sh~ file
+#+begin_src shell :tangle ./exercises/print-error-local.sh
+    #! /bin/bash
+
+    code_to_error_de()
+    {
+        case $1 in
+            1)
+                echo "Der Datei wurde nicht gefunden:"
+                ;;
+            2)
+                echo "Berechtigung zum Lesen der Datei verweigert:"
+                ;;
+        esac
+    }
+
+    code_to_error_en()
+    {
+        case $1 in
+            1)
+                echo "File not found:"
+                ;;
+            2)
+                echo "Permission to read the file denied:"
+                ;;
+        esac
+    }
+
+    print_error()
+    {
+        echo "$LANG"
+      case $LANG in
+      de_DE)
+        local func="code_to_error_de"
+        ;;
+      en_US)
+        local func="code_to_error_en"
+        ;;
+      ,*)
+        local func="code_to_error_en"
+        ;;
+    esac
+
+    echo "$($func $1) $2" >> debug.log  }
+
+    print_error 1 "readme.txt"
+#+end_src
+
++ Using an associative array in ~print-error-array.sh~ file
+
+#+begin_src shell :tangle ./exercises/print-error-array.sh
+#!/bin/bash
+
+print_error()
+{
+  declare -A messages
+
+  messages["de_DE",1]="Der Datei wurde nicht gefunden:"
+  messages["de_DE",2]="Berechtigung zum Lesen der Datei verweigert:"
+
+  messages["en_US",1]="File not found:"
+  messages["en_US",2]="Permission to read the file denied:"
+
+  echo "${messages[$LANGUAGE,$1]} $2" >> debug.log
+}
+
+print_error 1 "readme.txt"  
 #+end_src
